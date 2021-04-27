@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RecTaskModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="100" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="DocumentHead">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="NetPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="GrossPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DocumentPosition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="NetPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="GrossPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="DocumentHeadId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_DocumentHead_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="DocumentHead" Type="Self.DocumentHead" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentHead">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentPosition_DocumentHead">
+          <End Role="DocumentHead" Type="Self.DocumentHead" Multiplicity="1" />
+          <End Role="DocumentPosition" Type="Self.DocumentPosition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentHead">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentPosition">
+              <PropertyRef Name="DocumentHeadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RecTaskModelStoreContainer">
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocumentHead" EntityType="Self.DocumentHead" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocumentPosition" EntityType="Self.DocumentPosition" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_DocumentHead_Client" Association="Self.FK_DocumentHead_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="DocumentHead" EntitySet="DocumentHead" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentPosition_DocumentHead" Association="Self.FK_DocumentPosition_DocumentHead">
+            <End Role="DocumentHead" EntitySet="DocumentHead" />
+            <End Role="DocumentPosition" EntitySet="DocumentPosition" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RecTaskModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DocumentHead" Relationship="Self.FK_DocumentHead_Client" FromRole="Client" ToRole="DocumentHead" />
+        </EntityType>
+        <EntityType Name="DocumentHead">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NetPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="GrossPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_DocumentHead_Client" FromRole="DocumentHead" ToRole="Client" />
+          <NavigationProperty Name="DocumentPosition" Relationship="RecTaskModel.FK_DocumentPosition_DocumentHead" FromRole="DocumentHead" ToRole="DocumentPosition" />
+        </EntityType>
+        <EntityType Name="DocumentPosition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="NetPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="GrossPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="DocumentHeadId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DocumentHead" Relationship="RecTaskModel.FK_DocumentPosition_DocumentHead" FromRole="DocumentPosition" ToRole="DocumentHead" />
+        </EntityType>
+        <Association Name="FK_DocumentHead_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="DocumentHead" Type="Self.DocumentHead" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentHead">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RecTaskEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Client" EntityType="Self.Client" />
+          <EntitySet Name="DocumentHead" EntityType="Self.DocumentHead" />
+          <EntitySet Name="DocumentPosition" EntityType="Self.DocumentPosition" />
+          <AssociationSet Name="FK_DocumentHead_Client" Association="Self.FK_DocumentHead_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="DocumentHead" EntitySet="DocumentHead" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentPosition_DocumentHead" Association="RecTaskModel.FK_DocumentPosition_DocumentHead">
+            <End Role="DocumentHead" EntitySet="DocumentHead" />
+            <End Role="DocumentPosition" EntitySet="DocumentPosition" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_DocumentPosition_DocumentHead">
+          <End Type="RecTaskModel.DocumentHead" Role="DocumentHead" Multiplicity="1" />
+          <End Type="RecTaskModel.DocumentPosition" Role="DocumentPosition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentHead">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentPosition">
+              <PropertyRef Name="DocumentHeadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RecTaskModelStoreContainer" CdmEntityContainer="RecTaskEntities">
+          <EntitySetMapping Name="Client">
+            <EntityTypeMapping TypeName="RecTaskModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocumentHead">
+            <EntityTypeMapping TypeName="RecTaskModel.DocumentHead">
+              <MappingFragment StoreEntitySet="DocumentHead">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="NetPrice" ColumnName="NetPrice" />
+                <ScalarProperty Name="GrossPrice" ColumnName="GrossPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocumentPosition">
+            <EntityTypeMapping TypeName="RecTaskModel.DocumentPosition">
+              <MappingFragment StoreEntitySet="DocumentPosition">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NetPrice" ColumnName="NetPrice" />
+                <ScalarProperty Name="GrossPrice" ColumnName="GrossPrice" />
+                <ScalarProperty Name="DocumentHeadId" ColumnName="DocumentHeadId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
